@@ -3,13 +3,14 @@ using System.Collections;
 
 public class BoidWatcher : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public Transform boidContoller;
+
+    void LateUpdate()
+    {
+        if (boidContoller)
+        {
+            Vector3 watchpoint = boidContoller.GetComponent<BoidController>().flockCentre;
+            transform.LookAt(watchpoint + boidContoller.transform.position);
+        }
+    }
 }

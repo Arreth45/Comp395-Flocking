@@ -5,8 +5,9 @@ public class BoidController : MonoBehaviour {
     public float minSpeed = 5;
     public float maxSpeed = 20;
     public int flockSize = 10;
+    public float randomness = 1;
     public GameObject boidPrefab;
-    public GameObject boid;
+    public GameObject chasee;
 
     public Vector3 flockCentre;
     public Vector3 flockSpeed;
@@ -15,19 +16,21 @@ public class BoidController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
         boids = new GameObject[flockSize];
+
         for (int i = 0; i < flockSize; i++)
         {
             Vector3 position = new Vector3(
-                Random.value,
-                Random.value,
-                Random.value
-                );
+                Random.value * GetComponent<Collider>().bounds.size.x,
+                Random.value * GetComponent<Collider>().bounds.size.y,
+                Random.value * GetComponent<Collider>().bounds.size.z
+            ) - GetComponent<Collider>().bounds.extents;
 
-        GameObject boid = Instantiate(boidPrefab, transform.position, transform.rotation) as GameObject;
+            GameObject boid = Instantiate(boidPrefab, transform.position, transform.rotation) as GameObject;
             boid.transform.parent = transform;
             boid.transform.localPosition = position;
-            //boid.GetComponent<BoidFlocking>().SetController(gameObject);
+            boid.GetComponent<BoidFlocking>().SetController(gameObject);
             boids[i] = boid;
         }
 
@@ -41,11 +44,11 @@ public class BoidController : MonoBehaviour {
 
         foreach (GameObject boid in boids) {
             theCentre = theCentre + boid.transform.localPosition;
-            //theVelocity = theVelocity + boid.GetComponent<Rigidbody2D>().velocity;
+            theVelocity = theVelocity + boid.GetComponent<Rigidbody>().velocity;
         }
 
         flockCentre = theCentre / flockSize;
-        //flockSpeed = theVelocity / flockSpeed;
+        flockSpeed = theVelocity / flockSize;
 
 	
 	}
